@@ -1,3 +1,5 @@
+export const JEWEL_COUNT = 7;
+
 export const JewelColorHash = {
     red: 0,
     blue: 1,
@@ -8,7 +10,7 @@ export const JewelColorHash = {
     white: 6
 };
 
-export const JewelsNumberHash = [
+export const JewelsIndexHash = [
     'red',
     'blue',
     'yellow',

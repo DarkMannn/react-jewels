@@ -2,7 +2,7 @@
 
 ## To do:
 - [ ] game engine
-- [x] react app folder structure  
+- [x] react app folder structure
 - [ ] react view
 - [ ] react animation
 - [ ] draw jewels
