@@ -1,8 +1,14 @@
 import { JEWEL_COUNT } from './jewels';
-import { throwMissingParam } from '../utils/utils';
+import {
+    throwMissingParam,
+    extractPropFromObjectMatrix,
+    mutatePropsInObjectMatrix,
+} from '../utils/utils';
 
 const BOARD_WIDTH = 8;
 const BOARD_HEIGHT = 8;
+const extractJewelIndexFrom = extractPropFromObjectMatrix('jewelIndex');
+const mutateJewelIndexOf = mutatePropsInObjectMatrix('jewelIndex');
 
 const makeGenerateRandomIntInclusive = (min, max) =>
     () => {
@@ -48,9 +54,32 @@ const makeBoard = (colLength = BOARD_HEIGHT, rowLength = BOARD_WIDTH) => {
     return matrix;
 };
 
+const mutateShiftNullOf = matrix => ({
+    mutate: () => {
+        const jewelIndexMatrix = extractJewelIndexFrom(matrix);
+        const shiftedJewelIndexMatrix = jewelIndexMatrix.map(column =>
+            [...column].sort((a, b) => a === null ? 1 : (b === null ? -1 : 0))
+        );
+        mutateJewelIndexOf(matrix)(shiftedJewelIndexMatrix).mutate();
+    }
+});
+
+const mutateFillNullOf = generatorFn =>
+    matrix => ({
+        mutate: () => {
+            const jewelIndexMatrix = extractJewelIndexFrom(matrix);
+            const filledJewelIndexMatrix = jewelIndexMatrix.map(column =>
+                column.map(rowItem => rowItem !== null ? rowItem : generatorFn())
+            );
+            mutateJewelIndexOf(matrix)(filledJewelIndexMatrix).mutate();
+        }
+    });
+
 export const internals = {
     generateJewelIndex,
     createMatrix,
     makeBoardField,
     makeBoard,
+    mutateShiftNullOf,
+    mutateFillNullOf,
 };

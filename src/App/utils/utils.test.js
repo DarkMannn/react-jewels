@@ -3,6 +3,7 @@ import {
     extractPropFromObjectMatrix,
     compose2,
     compose,
+    mutatePropsInObjectMatrix,
 } from './utils';
 
 describe('throwMissingParam()', () => {
@@ -21,6 +22,24 @@ describe('extractPropFromObjectMatrix', () => {
         ];
         const primitiveMatrix = extractPropFromObjectMatrix('prop')(objectMatrix);
         expect(primitiveMatrix).toEqual([[1,2],[3,4]]);
+    });
+});
+
+describe('rewritePropsInObjectMatrix()', () => {
+    it('rewrites props of all objects in an matrix of objects', () => {
+        const objectMatrix = [
+            [{ prop: 1 }, { prop: 2 }],
+            [{ prop: 3 }, { prop: 4 }]
+        ];
+        const propMatrix = [
+            [4, 3],
+            [2, 1]
+        ];
+        mutatePropsInObjectMatrix('prop')(objectMatrix)(propMatrix).mutate();
+        expect(objectMatrix).toEqual([
+            [{ prop: 4 }, { prop: 3 }],
+            [{ prop: 2 }, { prop: 1 }]
+        ]);
     });
 });
 
