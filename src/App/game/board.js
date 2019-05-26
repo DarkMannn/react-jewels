@@ -18,7 +18,7 @@ const makeGenerateRandomIntInclusive = (min, max) =>
     };
 const generateJewelIndex = makeGenerateRandomIntInclusive(0, JEWEL_COUNT - 1);
 
-const createMatrix = (colLength, rowLength) => [...Array(rowLength)].map(() => [...Array(colLength)]);
+const createMatrix = (xLength, yLength) => [...Array(xLength)].map(() => [...Array(yLength)]);
 
 const makeBoardField = ({
     jewelIndex = generateJewelIndex(),
@@ -32,18 +32,18 @@ const makeBoardField = ({
     jewelIndex, x, y, up, down, left, right
 });
 
-const makeBoard = (colLength = BOARD_HEIGHT, rowLength = BOARD_WIDTH) => {
+const makeBoard = (xLength = BOARD_WIDTH, yLength = BOARD_HEIGHT) => {
 
-    const matrix = createMatrix(colLength, rowLength);
+    const matrix = createMatrix(xLength, yLength);
 
-    matrix.forEach((column, colIndex) =>
-        column.forEach((row, rowIndex) => {
+    matrix.forEach((xArray, x) =>
+        xArray.forEach((yField, y) => {
 
-            const currentField = matrix[colIndex][rowIndex] = makeBoardField({
-                x: colIndex,
-                y: rowIndex,
-                down: colIndex === 0 ? null : matrix[colIndex - 1][rowIndex],
-                left: rowIndex === 0 ? null : matrix[colIndex][rowIndex - 1]
+            const currentField = matrix[x][y] = makeBoardField({
+                x: x,
+                y: y,
+                left: x === 0 ? null : matrix[x - 1][y],
+                down: y === 0 ? null : matrix[x][y - 1]
             });
 
             if (currentField.down) currentField.down.up = currentField;
@@ -57,8 +57,8 @@ const makeBoard = (colLength = BOARD_HEIGHT, rowLength = BOARD_WIDTH) => {
 const mutateShiftNullOf = matrix => ({
     mutate: () => {
         const jewelIndexMatrix = extractJewelIndexFrom(matrix);
-        const shiftedJewelIndexMatrix = jewelIndexMatrix.map(column =>
-            [...column].sort((a, b) => a === null ? 1 : (b === null ? -1 : 0))
+        const shiftedJewelIndexMatrix = jewelIndexMatrix.map(xArray =>
+            [...xArray].sort((a, b) => a === null ? 1 : (b === null ? -1 : 0))
         );
         mutateJewelIndexOf(matrix)(shiftedJewelIndexMatrix).mutate();
     }
@@ -68,12 +68,48 @@ const mutateFillNullOf = generatorFn =>
     matrix => ({
         mutate: () => {
             const jewelIndexMatrix = extractJewelIndexFrom(matrix);
-            const filledJewelIndexMatrix = jewelIndexMatrix.map(column =>
-                column.map(rowItem => rowItem !== null ? rowItem : generatorFn())
+            const filledJewelIndexMatrix = jewelIndexMatrix.map(xArray =>
+                xArray.map(yField => yField !== null ? yField : generatorFn())
             );
             mutateJewelIndexOf(matrix)(filledJewelIndexMatrix).mutate();
         }
     });
+
+const getCombosInLinkedList = directionLink =>
+    startField => {
+
+        const coordinate = { right: 'x', up: 'y' }[directionLink];
+        let currentField = startField;
+        let latestCombo = [];
+        let sumOfCombos = [];
+
+        do {
+            if (latestCombo.length && currentField.jewelIndex !== latestCombo[latestCombo.length - 1].jewelIndex) {
+                if (latestCombo.length >= 3) sumOfCombos.push(...latestCombo.map(field => field[coordinate]));
+                latestCombo = [];
+            }
+            latestCombo.push(currentField);
+        } while (currentField = currentField[directionLink]);
+        if (latestCombo.length >= 3) sumOfCombos.push(...latestCombo.map(field => field[coordinate]));
+
+        return sumOfCombos;
+    };
+
+const traverseRightAndGetCombos = getCombosInLinkedList('right');
+const traverseUpAndGetCombos = getCombosInLinkedList('up');
+
+const traverseAndFindCombos = matrix => {
+
+    const comboMap = { x: [], y: [] };
+
+    const zeroRow = matrix.map(column => column[0]);
+    comboMap.x = zeroRow.map(traverseUpAndGetCombos);
+
+    const zeroColumn = matrix[0];
+    comboMap.y = zeroColumn.map(traverseRightAndGetCombos);
+
+    return comboMap;
+};
 
 export const internals = {
     generateJewelIndex,
@@ -82,4 +118,8 @@ export const internals = {
     makeBoard,
     mutateShiftNullOf,
     mutateFillNullOf,
+    getCombosInLinkedList,
+    traverseRightAndGetCombos,
+    traverseUpAndGetCombos,
+    traverseAndFindCombos,
 };

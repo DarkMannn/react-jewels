@@ -7,7 +7,7 @@ import {
 } from './utils';
 
 describe('throwMissingParam()', () => {
-    it('throws error when the required param is missing', () => {
+    it('throws error when the required param is missing', async () => {
         const fn = (x = throwMissingParam('x')) => 'Not gonna get called';
         const wrappedFn = () => fn();
         expect(wrappedFn).toThrow(Error('Missing param: x'));
@@ -15,7 +15,7 @@ describe('throwMissingParam()', () => {
 });
 
 describe('extractPropFromObjectMatrix', () => {
-    it('makes matrix of primitive values', () => {
+    it('makes matrix of primitive values', async () => {
         const objectMatrix = [
             [{ prop: 1 }, { prop: 2 }],
             [{ prop: 3 }, { prop: 4 }]
@@ -26,7 +26,7 @@ describe('extractPropFromObjectMatrix', () => {
 });
 
 describe('rewritePropsInObjectMatrix()', () => {
-    it('rewrites props of all objects in an matrix of objects', () => {
+    it('rewrites props of all objects in an matrix of objects', async () => {
         const objectMatrix = [
             [{ prop: 1 }, { prop: 2 }],
             [{ prop: 3 }, { prop: 4 }]
@@ -44,7 +44,7 @@ describe('rewritePropsInObjectMatrix()', () => {
 });
 
 describe('compose2()', () => {
-    it('composes two functions successfully', () => {
+    it('composes two functions successfully', async () => {
         const fn1 = () => 5;
         const fn2 = arg => arg;
         const composed = compose2(fn2, fn1);
@@ -54,7 +54,7 @@ describe('compose2()', () => {
 });
 
 describe('compose()', () => {
-    it('composes multiple functions successfully', () => {
+    it('composes multiple functions successfully', async () => {
         const fn1 = () => 5;
         const fn2 = arg => arg + 1;
         const fn3 = arg => arg * 2;
