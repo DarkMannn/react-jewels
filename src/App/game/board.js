@@ -54,6 +54,19 @@ const makeBoard = (xLength = BOARD_WIDTH, yLength = BOARD_HEIGHT) => {
     return matrix;
 };
 
+const mutateCombosToNullOf = matrix =>
+    comboMatrix => ({
+        mutate: () => {
+            const jewelIndexMatrix = extractJewelIndexFrom(matrix);
+            const nullifiedJewelIndexMatrix = jewelIndexMatrix.map((column, columnIndex) =>
+                column.map((row, rowIndex) =>
+                    !comboMatrix[columnIndex][rowIndex] ? row : null
+                )
+            );
+            mutateJewelIndexOf(matrix)(nullifiedJewelIndexMatrix).mutate();
+        }
+});
+
 const mutateShiftNullOf = matrix => ({
     mutate: () => {
         const jewelIndexMatrix = extractJewelIndexFrom(matrix);
@@ -64,12 +77,12 @@ const mutateShiftNullOf = matrix => ({
     }
 });
 
-const mutateFillNullOf = generatorFn =>
+const mutateFillNullOf = fillFn =>
     matrix => ({
         mutate: () => {
             const jewelIndexMatrix = extractJewelIndexFrom(matrix);
             const filledJewelIndexMatrix = jewelIndexMatrix.map(xArray =>
-                xArray.map(yField => yField !== null ? yField : generatorFn())
+                xArray.map(yField => yField !== null ? yField : fillFn())
             );
             mutateJewelIndexOf(matrix)(filledJewelIndexMatrix).mutate();
         }
@@ -111,15 +124,30 @@ const traverseAndFindCombos = matrix => {
     return comboMap;
 };
 
+const generateComboMatrixFromCombos = comboMap => {
+    const comboMatrix = createMatrix(comboMap.x.length, comboMap.y.length);
+
+    comboMap.x.forEach((column, columnIndex) =>
+        column.forEach(rowIndex => comboMatrix[columnIndex][rowIndex] = true)
+    );
+    comboMap.y.forEach((row, rowIndex) =>
+        row.forEach(columnIndex => comboMatrix[columnIndex][rowIndex] = true)
+    );
+
+    return comboMatrix;
+}
+
 export const internals = {
     generateJewelIndex,
     createMatrix,
     makeBoardField,
     makeBoard,
+    mutateCombosToNullOf,
     mutateShiftNullOf,
     mutateFillNullOf,
     getCombosInLinkedList,
     traverseRightAndGetCombos,
     traverseUpAndGetCombos,
     traverseAndFindCombos,
+    generateComboMatrixFromCombos,
 };

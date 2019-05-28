@@ -122,6 +122,32 @@ describe('makeBoard()', () => {
     });
 });
 
+describe('mutateCombosToNullOf()', () => {
+    it('mutates combos to null values reading boolean combo map', async () => {
+        const stubField = (jewelIndex = null) => ({ jewelIndex });
+        const stubMatrix = [
+            [stubField(1), stubField(1), stubField(1), stubField(3)],
+            [stubField(1), stubField(3), stubField(2), stubField(0)],
+            [stubField(5), stubField(5), stubField(5), stubField(0)],
+            [stubField(4), stubField(3), stubField(2), stubField(0)]
+        ];
+        const comboMatrix = [
+            [true, true, true, undefined],
+            [undefined, undefined, undefined, true],
+            [true, true, true, true],
+            [undefined, undefined, undefined, true]
+        ];
+        const expectedResultMatrix = [
+            [stubField(), stubField(), stubField(), stubField(3)],
+            [stubField(1), stubField(3), stubField(2), stubField()],
+            [stubField(), stubField(), stubField(), stubField()],
+            [stubField(4), stubField(3), stubField(2), stubField()]
+        ];
+        internals.mutateCombosToNullOf(stubMatrix)(comboMatrix).mutate();
+        expect(stubMatrix).toMatchObject(expectedResultMatrix);
+    });
+});
+
 describe('mutateShiftNullOf()', () => {
     it('shifts null jewelIndex fields at the top', async () => {
         const stubField = (jewelIndex = null) => ({ jewelIndex });
@@ -259,6 +285,28 @@ describe('traverseAndFindCombos()', () => {
             [],
             [],
             [1, 2, 3]
+        ]);
+    });
+});
+
+describe('generateComboMatrixFromCombos()', () => {
+    it('generates matrix of "true" values where the combos are', async () => {
+        const gameBoard4 = internals.makeBoard(4, 4);
+        const stubJewels = [
+            [1, 1, 1, 2],
+            [2, 3, 4, 4],
+            [5, 5, 5, 4],
+            [5, 5, 2, 4]
+        ];
+        mutatePropsInObjectMatrix('jewelIndex')(gameBoard4)(stubJewels).mutate();
+
+        const comboMap = internals.traverseAndFindCombos(gameBoard4);
+        const comboMatrix = internals.generateComboMatrixFromCombos(comboMap);
+        expect(comboMatrix).toEqual([
+            [true, true, true, undefined],
+            [undefined, undefined, undefined, true],
+            [true, true, true, true],
+            [undefined, undefined, undefined, true]
         ]);
     });
 });
