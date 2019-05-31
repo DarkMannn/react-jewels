@@ -60,7 +60,9 @@ const mutateCombosToNullOf = matrix =>
             const jewelIndexMatrix = extractJewelIndexFrom(matrix);
             const nullifiedJewelIndexMatrix = jewelIndexMatrix.map((column, columnIndex) =>
                 column.map((row, rowIndex) =>
-                    !comboMatrix[columnIndex][rowIndex] ? row : null
+                    comboMatrix[columnIndex]
+                        ? !comboMatrix[columnIndex][rowIndex] ? row : null
+                        : jewelIndexMatrix[columnIndex][rowIndex]
                 )
             );
             mutateJewelIndexOf(matrix)(nullifiedJewelIndexMatrix).mutate();
@@ -77,8 +79,8 @@ const mutateShiftNullOf = matrix => ({
     }
 });
 
-const mutateFillNullOf = fillFn =>
-    matrix => ({
+const mutateFillNullOf = matrix =>
+    fillFn => ({
         mutate: () => {
             const jewelIndexMatrix = extractJewelIndexFrom(matrix);
             const filledJewelIndexMatrix = jewelIndexMatrix.map(xArray =>
@@ -88,6 +90,14 @@ const mutateFillNullOf = fillFn =>
         }
     });
 
+const mutateSwapJewelIndexesFromTo = fromField =>
+    toField => ({
+        mutate: () => {
+            [fromField.jewelIndex, toField.jewelIndex] = [toField.jewelIndex, fromField.jewelIndex];
+        }
+    });
+
+/* eslint-disable no-cond-assign */
 const getCombosInLinkedList = directionLink =>
     startField => {
 
@@ -124,6 +134,21 @@ const traverseAndFindCombos = matrix => {
     return comboMap;
 };
 
+const traverseAndFindCombo = field => {
+
+    const partialComboMap = { x: [], y: [] };
+
+    const travelLeft = (field) => field.left ? travelLeft(field.left) : field;
+    const farLeftField = travelLeft(field);
+    partialComboMap.y[field.y] = traverseRightAndGetCombos(farLeftField);
+
+    const travelDown = (field) => field.down ? travelDown(field.down) : field;
+    const bottomField = travelDown(field);
+    partialComboMap.x[field.x] = traverseUpAndGetCombos(bottomField);
+
+    return partialComboMap;
+};
+
 const generateComboMatrixFromCombos = comboMap => {
     const comboMatrix = createMatrix(comboMap.x.length, comboMap.y.length);
 
@@ -145,9 +170,11 @@ export const internals = {
     mutateCombosToNullOf,
     mutateShiftNullOf,
     mutateFillNullOf,
+    mutateSwapJewelIndexesFromTo,
     getCombosInLinkedList,
     traverseRightAndGetCombos,
     traverseUpAndGetCombos,
     traverseAndFindCombos,
+    traverseAndFindCombo,
     generateComboMatrixFromCombos,
 };
