@@ -2,6 +2,15 @@ export const throwMissingParam = paramName => {
     throw Error(`Missing param: ${paramName}`)
 };
 
+export const createMatrix = (xLength, yLength) => [...Array(xLength)].map(() => [...Array(yLength)]);
+
+export const makeGenerateRandomIntInclusive = (min, max) =>
+    () => {
+        const minInt = Math.ceil(min);
+        const maxInt = Math.floor(max);
+        return Math.floor(Math.random() * (maxInt - minInt + 1)) + minInt;
+    };
+
 export const extractPropFromObjectMatrix = prop =>
     matrix =>
         matrix.map(column =>

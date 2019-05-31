@@ -18,18 +18,6 @@ describe('generateJewelIndex()', () => {
     });
 });
 
-describe('createMatrix()', () => {
-    it('creates two dimensional array', async () => {
-        const x1 = 2;
-        const y1 = 3;
-        const matrix1 = internals.createMatrix(x1, y1);
-        expect(matrix1).toHaveLength(x1);
-        matrix1.forEach(row => {
-            expect(row).toHaveLength(y1);
-        });
-    });
-});
-
 describe('makeBoardField()', () => {
     it('makes one boardField object with default values', async () => {
         const boardField = internals.makeBoardField({

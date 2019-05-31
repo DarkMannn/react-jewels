@@ -1,9 +1,11 @@
 import {
     throwMissingParam,
+    createMatrix,
     extractPropFromObjectMatrix,
     compose2,
     compose,
     mutatePropsInObjectMatrix,
+    makeGenerateRandomIntInclusive,
 } from './utils';
 
 describe('throwMissingParam()', () => {
@@ -11,6 +13,30 @@ describe('throwMissingParam()', () => {
         const fn = (x = throwMissingParam('x')) => 'Not gonna get called';
         const wrappedFn = () => fn();
         expect(wrappedFn).toThrow(Error('Missing param: x'));
+    });
+});
+
+describe('createMatrix()', () => {
+    it('creates two dimensional array', async () => {
+        const x1 = 2;
+        const y1 = 3;
+        const matrix1 = createMatrix(x1, y1);
+        expect(matrix1).toHaveLength(x1);
+        matrix1.forEach(row => {
+            expect(row).toHaveLength(y1);
+        });
+    });
+});
+
+describe('makeGenerateRandomIntInclusive()', () => {
+    it('makes random int generator that generates inclusive integers', async () => {
+        const generateFromOneToTen = makeGenerateRandomIntInclusive(1, 10);
+        let timesToTest = 10;
+        while (--timesToTest) {
+            const generatedInt = generateFromOneToTen();
+            expect(generatedInt).toBeGreaterThanOrEqual(1);
+            expect(generatedInt).toBeLessThanOrEqual(10);
+        }
     });
 });
 
@@ -25,8 +51,8 @@ describe('extractPropFromObjectMatrix', () => {
     });
 });
 
-describe('rewritePropsInObjectMatrix()', () => {
-    it('rewrites props of all objects in an matrix of objects', async () => {
+describe('mutatePropsInObjectMatrix()', () => {
+    it('mutates props of all objects in an matrix of objects', async () => {
         const objectMatrix = [
             [{ prop: 1 }, { prop: 2 }],
             [{ prop: 3 }, { prop: 4 }]

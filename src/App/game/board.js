@@ -2,6 +2,8 @@ import { JEWEL_COUNT } from './jewels';
 import {
     throwMissingParam,
     extractPropFromObjectMatrix,
+    createMatrix,
+    makeGenerateRandomIntInclusive,
     mutatePropsInObjectMatrix,
 } from '../utils/utils';
 
@@ -9,16 +11,7 @@ const BOARD_WIDTH = 8;
 const BOARD_HEIGHT = 8;
 const extractJewelIndexFrom = extractPropFromObjectMatrix('jewelIndex');
 const mutateJewelIndexOf = mutatePropsInObjectMatrix('jewelIndex');
-
-const makeGenerateRandomIntInclusive = (min, max) =>
-    () => {
-        const minInt = Math.ceil(min);
-        const maxInt = Math.floor(max);
-        return Math.floor(Math.random() * (maxInt - minInt + 1)) + minInt;
-    };
 const generateJewelIndex = makeGenerateRandomIntInclusive(0, JEWEL_COUNT - 1);
-
-const createMatrix = (xLength, yLength) => [...Array(xLength)].map(() => [...Array(yLength)]);
 
 const makeBoardField = ({
     jewelIndex = generateJewelIndex(),
@@ -32,7 +25,7 @@ const makeBoardField = ({
     jewelIndex, x, y, up, down, left, right
 });
 
-const makeBoard = (xLength = BOARD_WIDTH, yLength = BOARD_HEIGHT) => {
+export const makeBoard = (xLength = BOARD_WIDTH, yLength = BOARD_HEIGHT) => {
 
     const matrix = createMatrix(xLength, yLength);
 
@@ -54,7 +47,7 @@ const makeBoard = (xLength = BOARD_WIDTH, yLength = BOARD_HEIGHT) => {
     return matrix;
 };
 
-const mutateCombosToNullOf = matrix =>
+export const mutateCombosToNullOf = matrix =>
     comboMatrix => ({
         mutate: () => {
             const jewelIndexMatrix = extractJewelIndexFrom(matrix);
@@ -69,7 +62,7 @@ const mutateCombosToNullOf = matrix =>
         }
 });
 
-const mutateShiftNullOf = matrix => ({
+export const mutateShiftNullOf = matrix => ({
     mutate: () => {
         const jewelIndexMatrix = extractJewelIndexFrom(matrix);
         const shiftedJewelIndexMatrix = jewelIndexMatrix.map(xArray =>
@@ -79,7 +72,7 @@ const mutateShiftNullOf = matrix => ({
     }
 });
 
-const mutateFillNullOf = matrix =>
+export const mutateFillNullOf = matrix =>
     fillFn => ({
         mutate: () => {
             const jewelIndexMatrix = extractJewelIndexFrom(matrix);
@@ -90,7 +83,7 @@ const mutateFillNullOf = matrix =>
         }
     });
 
-const mutateSwapJewelIndexesFromTo = fromField =>
+export const mutateSwapJewelIndexesFromTo = fromField =>
     toField => ({
         mutate: () => {
             [fromField.jewelIndex, toField.jewelIndex] = [toField.jewelIndex, fromField.jewelIndex];
@@ -121,7 +114,7 @@ const getCombosInLinkedList = directionLink =>
 const traverseRightAndGetCombos = getCombosInLinkedList('right');
 const traverseUpAndGetCombos = getCombosInLinkedList('up');
 
-const traverseAndFindCombos = matrix => {
+export const traverseAndFindCombos = matrix => {
 
     const comboMap = { x: [], y: [] };
 
@@ -134,7 +127,7 @@ const traverseAndFindCombos = matrix => {
     return comboMap;
 };
 
-const traverseAndFindCombo = field => {
+export const traverseAndFindCombo = field => {
 
     const partialComboMap = { x: [], y: [] };
 
@@ -149,7 +142,7 @@ const traverseAndFindCombo = field => {
     return partialComboMap;
 };
 
-const generateComboMatrixFromCombos = comboMap => {
+export const generateComboMatrixFromCombos = comboMap => {
     const comboMatrix = createMatrix(comboMap.x.length, comboMap.y.length);
 
     comboMap.x.forEach((column, columnIndex) =>
@@ -164,7 +157,6 @@ const generateComboMatrixFromCombos = comboMap => {
 
 export const internals = {
     generateJewelIndex,
-    createMatrix,
     makeBoardField,
     makeBoard,
     mutateCombosToNullOf,
