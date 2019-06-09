@@ -4,6 +4,7 @@ import {
     extractPropFromObjectMatrix,
     compose2,
     compose,
+    repeat,
     mutatePropsInObjectMatrix,
     makeGenerateRandomIntInclusive,
 } from './utils';
@@ -87,5 +88,13 @@ describe('compose()', () => {
         const composed = compose(fn3, fn2, fn1);
         const result = composed();
         expect(result).toBe(12);
+    });
+});
+
+describe('repeat()', () => {
+    it('repeats a function multiple times passing number of iteration from 0', async () => {
+        const double = num => num * 2;
+        const results = repeat(5)(double);
+        expect(results).toEqual([0, 2, 4, 6, 8]);
     });
 });

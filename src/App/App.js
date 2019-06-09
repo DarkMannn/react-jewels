@@ -1,9 +1,15 @@
 import React from 'react';
 import { css } from 'styled-components';
 import 'styled-components/macro';
-import Jewel from './components/jewel/jewel.js'
+import Game from './components/game/game.js';
 
 const AppCss = css`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
     text-align: center;
     background-color: gray;
     color: white;
@@ -12,15 +18,7 @@ const AppCss = css`
 function App() {
   return (
     <div css={AppCss}>
-        <p>
-            Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-            This is my text!
-        </p>
-        <Jewel backgroundColor='green'></Jewel>
-        <Jewel backgroundColor='purple'></Jewel>
-        <Jewel backgroundColor='orange'></Jewel>
+        <Game></Game>
     </div>
   );
 }

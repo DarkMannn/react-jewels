@@ -4,9 +4,9 @@ import 'styled-components/macro';
 
 const JewelCss = css`
     border: 2px solid black;
-    width: 12.5px;
-    height: 12.5px;
-    background-color: ${({ backgroundColor }) => backgroundColor};
+    width: 90%;
+    height: 90%;
+    background-color: ${({ backgroundColor = 'khaki' }) => backgroundColor};
 `;
 
 function Jewel({ backgroundColor }) {
