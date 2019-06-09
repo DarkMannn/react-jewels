@@ -56,12 +56,24 @@ const TitleCss = css`
     }
 `;
 
+const ScoreCss = css`
+    grid-area: 3 / 2 / 5 / 3;
+    background-color: purple;
+`;
+
+const HintCss = css`
+    grid-area: 7 / 2 / 8 / 3;
+    background-color: orange;
+`;
+
 function Game({ backgroundColor }) {
     return (
         <div css={GameCss}>
             <p css={TitleCss}>
                 Welcome To React-Jewels Game
             </p>
+            <div css={ScoreCss}>Score: 300</div>
+            <div css={HintCss}>Hint</div>
             <Board></Board>
         </div>
     );
