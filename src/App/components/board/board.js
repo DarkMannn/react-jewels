@@ -9,7 +9,7 @@ const BoardCss = css`
     grid-template: repeat(8, 1fr) / repeat(8, 1fr);
     grid-area: 3 / 4 / 8 / 9;
     gap: 0.2%;
-    border: 4px solid black;
+    border: 2px solid black;
 `;
 
 function Board({ backgroundColor }) {

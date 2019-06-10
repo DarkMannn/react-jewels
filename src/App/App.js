@@ -11,7 +11,7 @@ const AppCss = css`
     width: 100%;
     height: 100%;
     text-align: center;
-    background-color: gray;
+    background-color: #4A4A4A;
     color: white;
 `;
 
