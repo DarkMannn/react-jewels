@@ -74,7 +74,7 @@ const ScoreCss = css`
     background-color: #5A5A5A;
     color: #0099CC;
     font-weight: bold;
-    margin: 0% 5%;
+    margin: 0% 15%;
 `;
 
 const ScoreNumberCss = css`
