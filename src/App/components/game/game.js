@@ -90,7 +90,7 @@ const HintCss = css`
 `;
 
 
-function Game({ backgroundColor }) {
+function Game() {
     return (
         <div css={GameCss}>
             <p css={TitleCss}>
