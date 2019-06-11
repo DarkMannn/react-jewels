@@ -1,3 +1,6 @@
+import { css } from 'styled-components';
+import 'styled-components/macro';
+
 export const throwMissingParam = paramName => {
     throw Error(`Missing param: ${paramName}`)
 };
@@ -30,3 +33,17 @@ export const mutatePropsInObjectMatrix = prop =>
 export const compose2 = (fn1, fn2) => arg => fn1(fn2(arg));
 export const compose = (...fns) => fns.reduce(compose2);
 export const repeat = times => fn => [...Array(times).keys()].map(num => fn(num));
+
+const displayWidths = [0, 600, 800, 1000, 1200, 10000];
+export const media = {};
+displayWidths.forEach((width, index, array) => {
+
+    if (index === array.length - 1) return;
+    media[`min${width}max${array[index + 1]}`] = (...args) => css`
+        @media screen
+        and (min-width: ${width}px)
+        and (max-width: ${array[index + 1]}px) {
+            ${css(...args)}
+        }
+    `;
+});

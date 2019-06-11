@@ -7,6 +7,7 @@ import {
     repeat,
     mutatePropsInObjectMatrix,
     makeGenerateRandomIntInclusive,
+    media
 } from './utils';
 
 describe('throwMissingParam()', () => {
@@ -96,5 +97,17 @@ describe('repeat()', () => {
         const double = num => num * 2;
         const results = repeat(5)(double);
         expect(results).toEqual([0, 2, 4, 6, 8]);
+    });
+});
+
+describe('media {}', () => {
+    it('has well formed css functions', async () => {
+        expect(Object.keys(media)).toEqual([
+            'min0max600',
+            'min600max800',
+            'min800max1000',
+            'min1000max1200',
+            'min1200max10000'
+        ]);
     });
 });
