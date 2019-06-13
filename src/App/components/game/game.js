@@ -91,21 +91,19 @@ const HintCss = css`
 
 
 function Game() {
-    return (
-        <div css={GameCss}>
-            <p css={TitleCss}>
-                React-Jewels Game
-            </p>
-            <div css={ScoreCss}>
-                <span>Score:</span>
-                <span css={ScoreNumberCss}>300</span>
-            </div>
-            <div css={HintCss}>
-                <span>Hint</span>
-            </div>
-            <Board></Board>
+    return <div css={GameCss}>
+        <p css={TitleCss}>
+            React-Jewels Game
+        </p>
+        <div css={ScoreCss}>
+            <span>Score:</span>
+            <span css={ScoreNumberCss}>300</span>
         </div>
-    );
+        <div css={HintCss}>
+            <span>Hint</span>
+        </div>
+        <Board></Board>
+    </div>;
 };
 
 export default Game;

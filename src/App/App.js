@@ -16,11 +16,9 @@ const AppCss = css`
 `;
 
 function App() {
-  return (
-    <div css={AppCss}>
+    return <div css={AppCss}>
         <Game></Game>
-    </div>
-  );
+    </div>;
 }
 
 export default App;

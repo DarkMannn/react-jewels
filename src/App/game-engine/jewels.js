@@ -1,21 +1,21 @@
 export const JEWEL_COUNT = 7;
 
 export const JewelColorHash = {
-    red: 0,
-    blue: 1,
+    darkred: 0,
+    darkblue: 1,
     yellow: 2,
     orange: 3,
     purple: 4,
-    green: 5,
+    darkgreen: 5,
     white: 6
 };
 
 export const JewelsIndexHash = [
-    'red',
-    'blue',
+    'darkred',
+    'darkblue',
     'yellow',
     'orange',
     'purple',
-    'green',
+    'darkgreen',
     'white'
 ];
