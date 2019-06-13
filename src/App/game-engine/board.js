@@ -47,48 +47,34 @@ export const makeBoard = (xLength = BOARD_WIDTH, yLength = BOARD_HEIGHT) => {
     return matrix;
 };
 
-export const mutateCombosToNullOf = matrix =>
-    comboMatrix => ({
-        mutate: () => {
-            const jewelIndexMatrix = extractJewelIndexFrom(matrix);
-            const nullifiedJewelIndexMatrix = jewelIndexMatrix.map((column, columnIndex) =>
-                column.map((row, rowIndex) =>
-                    comboMatrix[columnIndex]
-                        ? !comboMatrix[columnIndex][rowIndex] ? row : null
-                        : jewelIndexMatrix[columnIndex][rowIndex]
-                )
-            );
-            mutateJewelIndexOf(matrix)(nullifiedJewelIndexMatrix).mutate();
-        }
-});
+export const createNullifiedCombosMatrix = comboMatrix => matrix => {
 
-export const mutateShiftNullOf = matrix => ({
-    mutate: () => {
-        const jewelIndexMatrix = extractJewelIndexFrom(matrix);
-        const shiftedJewelIndexMatrix = jewelIndexMatrix.map(xArray =>
-            [...xArray].sort((a, b) => a === null ? 1 : (b === null ? -1 : 0))
-        );
-        mutateJewelIndexOf(matrix)(shiftedJewelIndexMatrix).mutate();
-    }
-});
+    const nullifiedCombosMatrix = matrix.map((column, columnIndex) =>
+        column.map((row, rowIndex) =>
+            comboMatrix[columnIndex]
+                ? !comboMatrix[columnIndex][rowIndex] ? row : null
+                : matrix[columnIndex][rowIndex]
+        )
+    );
 
-export const mutateFillNullOf = matrix =>
-    fillFn => ({
-        mutate: () => {
-            const jewelIndexMatrix = extractJewelIndexFrom(matrix);
-            const filledJewelIndexMatrix = jewelIndexMatrix.map(xArray =>
-                xArray.map(yField => yField !== null ? yField : fillFn())
-            );
-            mutateJewelIndexOf(matrix)(filledJewelIndexMatrix).mutate();
-        }
-    });
+    return nullifiedCombosMatrix;
+};
 
-export const mutateSwapJewelIndexesFromTo = fromField =>
-    toField => ({
-        mutate: () => {
-            [fromField.jewelIndex, toField.jewelIndex] = [toField.jewelIndex, fromField.jewelIndex];
-        }
-    });
+export const createNullShiftedMatrix = matrix => matrix.map(xArray =>
+    [...xArray].sort((a, b) => a === null ? 1 : (b === null ? -1 : 0))
+);
+
+export const createNullFilledMatrix = fillFn => matrix => matrix.map(xArray =>
+        xArray.map(yField => yField !== null ? yField : fillFn())
+);
+
+export const createTwoFieldSwappedMatrix = ({ x1, y1 }) => ({ x2, y2 }) => matrix => {
+
+    const newMatrix = JSON.parse(JSON.stringify(matrix));
+    [newMatrix[x1][y1], newMatrix[x2][y2]] = [newMatrix[x2][y2], newMatrix[x1][y1]];
+
+    return newMatrix;
+}
 
 /* eslint-disable no-cond-assign */
 const getCombosInLinkedList = directionLink =>
@@ -159,10 +145,10 @@ export const internals = {
     generateJewelIndex,
     makeBoardField,
     makeBoard,
-    mutateCombosToNullOf,
-    mutateShiftNullOf,
-    mutateFillNullOf,
-    mutateSwapJewelIndexesFromTo,
+    createNullifiedCombosMatrix,
+    createNullShiftedMatrix,
+    createNullFilledMatrix,
+    createTwoFieldSwappedMatrix,
     getCombosInLinkedList,
     traverseRightAndGetCombos,
     traverseUpAndGetCombos,
