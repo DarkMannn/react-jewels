@@ -7,7 +7,8 @@ import {
     repeat,
     mutatePropsInObjectMatrix,
     makeGenerateRandomIntInclusive,
-    media
+    media,
+    wait
 } from './utils';
 
 describe('throwMissingParam()', () => {
@@ -109,5 +110,14 @@ describe('media {}', () => {
             'min1000max1200',
             'min1200max10000'
         ]);
+    });
+});
+
+describe('wait()', () => {
+    it('waits without an error', async () => {
+        await wait(10);
+        const temp = 5;
+        await wait(10);
+        expect(temp).toBe(5);
     });
 });
