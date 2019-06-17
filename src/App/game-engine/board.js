@@ -1,17 +1,18 @@
 import { JEWEL_COUNT } from './jewels';
 import {
     throwMissingParam,
-    extractPropFromObjectMatrix,
     createMatrix,
     makeGenerateRandomIntInclusive,
     mutatePropsInObjectMatrix,
+    extractPropFromObjectMatrix
 } from '../utils/utils';
 
-const BOARD_WIDTH = 8;
-const BOARD_HEIGHT = 8;
-const extractJewelIndexFrom = extractPropFromObjectMatrix('jewelIndex');
-const mutateJewelIndexOf = mutatePropsInObjectMatrix('jewelIndex');
-const generateJewelIndex = makeGenerateRandomIntInclusive(0, JEWEL_COUNT - 1);
+export const BOARD_WIDTH = 8;
+export const BOARD_HEIGHT = 8;
+
+export const extractJewelIndexFrom = extractPropFromObjectMatrix('jewelIndex');
+export const generateJewelIndex = makeGenerateRandomIntInclusive(0, JEWEL_COUNT - 1);
+export const mutateJewelIndexOf = mutatePropsInObjectMatrix('jewelIndex');
 
 const makeBoardField = ({
     jewelIndex = generateJewelIndex(),
@@ -68,7 +69,7 @@ export const createNullFilledMatrix = fillFn => matrix => matrix.map(xArray =>
         xArray.map(yField => yField !== null ? yField : fillFn())
 );
 
-export const createTwoFieldSwappedMatrix = ({ x1, y1 }) => ({ x2, y2 }) => matrix => {
+export const createTwoFieldSwappedMatrix = ({ x: x1, y: y1 }) => ({ x: x2, y: y2 }) => matrix => {
 
     const newMatrix = JSON.parse(JSON.stringify(matrix));
     [newMatrix[x1][y1], newMatrix[x2][y2]] = [newMatrix[x2][y2], newMatrix[x1][y1]];

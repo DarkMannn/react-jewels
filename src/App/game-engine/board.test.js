@@ -211,7 +211,7 @@ describe('createTwoFieldSwappedMatrix()', () => {
             [5, 3, 6, 4],
             [4, 4, 2, 4]
         ];
-        const swappedMatrix = internals.createTwoFieldSwappedMatrix({ x1: 2, y1: 1})({ x2: 2, y2: 2})(stubMatrix);
+        const swappedMatrix = internals.createTwoFieldSwappedMatrix({ x: 2, y: 1})({ x: 2, y: 2})(stubMatrix);
         expect(swappedMatrix).toMatchObject(expectedResultMatrix);
     });
 });
