@@ -21,43 +21,42 @@ export { createTwoFieldSwappedMatrix };
 export { BOARD_HEIGHT };
 export { BOARD_WIDTH };
 
-export const updateBoard = async ({ newMatrix, setMatrix, setComboMatrix }) => {
+export async function updateBoardUntilNoCombos({ hadCombo = false, setMatrix, setComboMatrix }) {
 
-    let moveHadHits = false;
+    const comboMap = traverseAndFindCombos(board);
+    if (!comboMap.x.some(col => col.length) && !comboMap.y.some(row => row.length)) {
+        return hadCombo || false;
+    }
+
+    const currentMatrix = extractJewelIndexFrom(board);
+    const comboMatrix = generateComboMatrixFromCombos(comboMap);
+    const nullifiedMatrix = createNullifiedCombosMatrix(comboMatrix)(currentMatrix);
+    setComboMatrix(nullifiedMatrix);
+    await wait();
+
+    setMatrix(nullifiedMatrix);
+    await wait();
+
+    const shiftedMatrix = createNullShiftedMatrix(nullifiedMatrix);
+    setComboMatrix(shiftedMatrix);
+    setMatrix(shiftedMatrix);
+    await wait();
+
+    const filledMatrix = createNullFilledMatrix(generateJewelIndex)(shiftedMatrix);
+    setComboMatrix(filledMatrix);
+    setMatrix(filledMatrix);
+    mutateJewelIndexOf(board)(filledMatrix).mutate();
+    await wait();
+
+    return updateBoardUntilNoCombos({ hadCombo: true, setMatrix, setComboMatrix });
+};
+
+export const updateBoardWithMatrix = async ({ newMatrix, setMatrix, setComboMatrix }) => {
+
     mutateJewelIndexOf(board)(newMatrix).mutate();
 
-    await (async function updateUntilNoCombos() {
-
-        const comboMap = traverseAndFindCombos(board);
-        if (!comboMap.x.some(col => col.length) && !comboMap.y.some(row => row.length)) {
-            return;
-        }
-
-        const currentMatrix = extractJewelIndexFrom(board);
-        const comboMatrix = generateComboMatrixFromCombos(comboMap);
-        const nullifiedMatrix = createNullifiedCombosMatrix(comboMatrix)(currentMatrix);
-        setComboMatrix(nullifiedMatrix);
-        await wait();
-
-        setMatrix(nullifiedMatrix);
-        await wait();
-
-        const shiftedMatrix = createNullShiftedMatrix(nullifiedMatrix);
-        setComboMatrix(shiftedMatrix);
-        setMatrix(shiftedMatrix);
-        await wait();
-
-        const filledMatrix = createNullFilledMatrix(generateJewelIndex)(shiftedMatrix);
-        setComboMatrix(filledMatrix);
-        setMatrix(filledMatrix);
-        mutateJewelIndexOf(board)(filledMatrix).mutate();
-        await wait();
-
-        moveHadHits = true;
-        return updateUntilNoCombos();
-    })();
-
-    return moveHadHits;
+    const hadCombos = await updateBoardUntilNoCombos({ setMatrix, setComboMatrix });
+    return hadCombos;
 };
 
 export const revertBoard = (oldMatrix) => {

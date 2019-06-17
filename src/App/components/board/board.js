@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { css } from 'styled-components';
 import 'styled-components/macro';
 import Jewel from '../jewel/jewel.js';
 import {
     initialMatrix,
-    updateBoard,
+    updateBoardUntilNoCombos,
+    updateBoardWithMatrix,
     revertBoard,
     createTwoFieldSwappedMatrix
 } from '../../game-engine/engine.js';
@@ -28,8 +29,14 @@ function Board() {
     const [matrix, setMatrix] = useState(initialMatrix);
     const [firstItem, setFirstItem] = useState(null);
     const [secondItem, setSecondItem] = useState(null);
-    const [isProcessing, setIsProcessing] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(true);
     const [comboMatrix, setComboMatrix] = useState(initialMatrix);
+
+    useEffect(() => {
+
+        updateBoardUntilNoCombos({ setMatrix, setComboMatrix })
+            .then(() => setIsProcessing(false));
+    }, []);
 
     async function onItemClick(x, y) {
 
@@ -54,7 +61,7 @@ function Board() {
 
             setFirstItem(null);
             setSecondItem(null);
-            const moveHadHits = await updateBoard({ newMatrix, setMatrix, setComboMatrix });
+            const moveHadHits = await updateBoardWithMatrix({ newMatrix, setMatrix, setComboMatrix });
             if (!moveHadHits) {
                 setMatrix(oldMatrix);
                 revertBoard(oldMatrix);
@@ -67,7 +74,7 @@ function Board() {
         matrix.map((xArray, x) =>
             xArray.map((yField, y) =>
                 <Jewel
-                    key={(4 * x) + y}
+                    key={(8 * x) + y}
                     x={x}
                     y={y}
                     isFocused={doItemsMatch({ x, y }, firstItem) || doItemsMatch({ x, y }, secondItem)}
