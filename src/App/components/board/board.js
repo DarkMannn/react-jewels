@@ -8,8 +8,8 @@ import {
     updateBoardWithMatrix,
     revertBoard,
     createTwoFieldSwappedMatrix
-} from '../../game-engine/engine.js';
-import { JewelsIndexHash } from '../../game-engine/jewels.js';
+} from '../../engine/engine.js';
+import { JewelsIndexHash } from '../../engine/jewels.js';
 import { wait } from '../../utils/utils.js';
 
 const BoardCss = css`

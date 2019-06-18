@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import 'styled-components/macro';
-import { BOARD_HEIGHT } from '../../game-engine/engine.js';
+import { BOARD_HEIGHT } from '../../engine/engine.js';
 
 const JewelDiv = styled.div.attrs(({ focused, combo, x, y, backgroundColor }) => ({
     style: {

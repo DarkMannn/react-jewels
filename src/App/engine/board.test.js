@@ -6,8 +6,6 @@ import {
     mutatePropsInObjectMatrix
 } from '../utils/utils';
 
-const stubField = (jewelIndex = null) => ({ jewelIndex });
-
 describe('generateJewelIndex()', () => {
     it('returns jewel index value from 0 to JEWEL_COUNT', async () => {
         [...Array(5)].forEach(() => {

@@ -2,13 +2,13 @@
 
 ## To do:
 - [x] game engine
-- [ ] game engine API
+- [x] game engine API
 - [x] react app folder structure
-- [ ] react view
+- [x] react view
 - [ ] react animation
 - [ ] draw jewels
 - [ ] terminal view (different repository)
-- [ ] make README.MD
+- [x] make README.MD
 
 ### Game Engine:
 - mappings for jewels/colors
