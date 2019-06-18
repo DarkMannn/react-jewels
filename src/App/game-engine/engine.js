@@ -21,11 +21,17 @@ export { createTwoFieldSwappedMatrix };
 export { BOARD_HEIGHT };
 export { BOARD_WIDTH };
 
-export async function updateBoardUntilNoCombos({ hadCombo = false, setMatrix, setComboMatrix, bumpScore }) {
+export async function updateBoardUntilNoCombos({
+    hadCombo = false,
+    setMatrix,
+    setComboMatrix,
+    bumpScore
+}) {
 
     const comboMap = traverseAndFindCombos(board);
     const comboCountReducer = (acc, col) => col.length ? acc + 1 : acc;
-    const comboCount = comboMap.x.reduce(comboCountReducer, 0) + comboMap.y.reduce(comboCountReducer, 0);
+    const comboCount = comboMap.x.reduce(comboCountReducer, 0) +
+        comboMap.y.reduce(comboCountReducer, 0);
 
     if (!comboCount) {
         return hadCombo || false;
@@ -55,7 +61,7 @@ export async function updateBoardUntilNoCombos({ hadCombo = false, setMatrix, se
     return updateBoardUntilNoCombos({ hadCombo: true, setMatrix, setComboMatrix, bumpScore });
 };
 
-export const updateBoardWithMatrix = async ({ newMatrix, setMatrix, setComboMatrix, bumpScore }) => {
+export async function updateBoardWithMatrix({ newMatrix, setMatrix, setComboMatrix, bumpScore }) {
 
     mutateJewelIndexOf(board)(newMatrix).mutate();
 
@@ -63,7 +69,7 @@ export const updateBoardWithMatrix = async ({ newMatrix, setMatrix, setComboMatr
     return hadCombos;
 };
 
-export const revertBoard = (oldMatrix) => {
+export function revertBoard(oldMatrix) {
 
     mutateJewelIndexOf(board)(oldMatrix).mutate();
 };

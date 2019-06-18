@@ -61,7 +61,12 @@ function Board({ bumpScore }) {
 
             setFirstItem(null);
             setSecondItem(null);
-            const moveHadHits = await updateBoardWithMatrix({ newMatrix, setMatrix, setComboMatrix, bumpScore });
+            const moveHadHits = await updateBoardWithMatrix({
+                newMatrix,
+                setMatrix,
+                setComboMatrix,
+                bumpScore
+            });
             if (!moveHadHits) {
                 setMatrix(oldMatrix);
                 revertBoard(oldMatrix);
