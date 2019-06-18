@@ -48,4 +48,4 @@ displayWidths.forEach((width, index, array) => {
     `;
 });
 
-export const wait = (ms = 1000) => new Promise(resolve => setTimeout(resolve, ms));
+export const wait = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms));

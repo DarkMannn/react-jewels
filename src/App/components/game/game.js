@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { css } from 'styled-components';
 import 'styled-components/macro';
 import Board from '../board/board.js';
@@ -64,20 +64,23 @@ const HintCss = css`
     }
 `;
 
-
 function Game() {
+    const [score, setScore] = useState(0);
+    function bumpScore() {
+        setScore(score => score + 100);
+    };
     return <div css={GameCss}>
         <p css={TitleCss}>
             React-Jewels Game
         </p>
         <div css={ScoreCss}>
             <span>Score:</span>
-            <span css={ScoreNumberCss}>300</span>
+            <span css={ScoreNumberCss}>{score}</span>
         </div>
         <div css={HintCss}>
             <span>Hint</span>
         </div>
-        <Board></Board>
+        <Board bumpScore={bumpScore}></Board>
     </div>;
 };
 

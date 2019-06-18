@@ -25,7 +25,7 @@ const areItemsAdjacent = (firstItem, secondItem) =>
 const doItemsMatch = (firstItem, secondItem) =>
     firstItem && secondItem && firstItem.x === secondItem.x && firstItem.y === secondItem.y;
 
-function Board() {
+function Board({ bumpScore }) {
     const [matrix, setMatrix] = useState(initialMatrix);
     const [firstItem, setFirstItem] = useState(null);
     const [secondItem, setSecondItem] = useState(null);
@@ -34,9 +34,9 @@ function Board() {
 
     useEffect(() => {
 
-        updateBoardUntilNoCombos({ setMatrix, setComboMatrix })
+        updateBoardUntilNoCombos({ setMatrix, setComboMatrix, bumpScore })
             .then(() => setIsProcessing(false));
-    }, []);
+    }, [bumpScore]);
 
     async function onItemClick(x, y) {
 
@@ -61,7 +61,7 @@ function Board() {
 
             setFirstItem(null);
             setSecondItem(null);
-            const moveHadHits = await updateBoardWithMatrix({ newMatrix, setMatrix, setComboMatrix });
+            const moveHadHits = await updateBoardWithMatrix({ newMatrix, setMatrix, setComboMatrix, bumpScore });
             if (!moveHadHits) {
                 setMatrix(oldMatrix);
                 revertBoard(oldMatrix);
