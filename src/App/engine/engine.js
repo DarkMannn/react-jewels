@@ -1,5 +1,6 @@
 import {
     traverseAndFindCombos,
+    traverseAndFindPotentialCombos,
     generateComboMatrixFromCombos,
     createNullifiedCombosMatrix,
     createNullShiftedMatrix,
@@ -72,4 +73,10 @@ export async function updateBoardWithMatrix({ newMatrix, setMatrix, setComboMatr
 export function revertBoard(oldMatrix) {
 
     mutateJewelIndexOf(board)(oldMatrix).mutate();
+};
+
+export function getHint() {
+
+    const potentialCombos = traverseAndFindPotentialCombos(board);
+    return potentialCombos.length && potentialCombos[0].length && potentialCombos[0][0];
 };

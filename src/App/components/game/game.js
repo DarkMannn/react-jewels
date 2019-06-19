@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { css } from 'styled-components';
 import 'styled-components/macro';
 import Board from '../board/board.js';
@@ -66,9 +66,19 @@ const HintCss = css`
 
 function Game() {
     const [score, setScore] = useState(0);
+    const boardRef = useRef();
+
     function bumpScore() {
         setScore(score => score + 100);
     };
+
+    async function showHintOrAlertGameOver() {
+        const hint = await boardRef.current.showHint()
+        if (!hint) {
+            alert('No more moves. Reload the page for another game.');
+        }
+    }
+
     return <div css={GameCss}>
         <p css={TitleCss}>
             React-Jewels Game
@@ -77,10 +87,10 @@ function Game() {
             <span>Score:</span>
             <span css={ScoreNumberCss}>{score}</span>
         </div>
-        <div css={HintCss}>
+        <div css={HintCss} onClick={showHintOrAlertGameOver}>
             <span>Hint</span>
         </div>
-        <Board bumpScore={bumpScore}></Board>
+        <Board bumpScore={bumpScore} ref={boardRef}></Board>
     </div>;
 };
 

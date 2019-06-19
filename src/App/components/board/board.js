@@ -1,4 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, {
+    useState,
+    useEffect,
+    forwardRef,
+    useImperativeHandle
+} from 'react';
 import { css } from 'styled-components';
 import 'styled-components/macro';
 import Jewel from '../jewel/jewel.js';
@@ -7,7 +12,8 @@ import {
     updateBoardUntilNoCombos,
     updateBoardWithMatrix,
     revertBoard,
-    createTwoFieldSwappedMatrix
+    createTwoFieldSwappedMatrix,
+    getHint
 } from '../../engine/engine.js';
 import { JewelsIndexHash } from '../../engine/jewels.js';
 import { wait } from '../../utils/utils.js';
@@ -25,7 +31,7 @@ const areItemsAdjacent = (firstItem, secondItem) =>
 const doItemsMatch = (firstItem, secondItem) =>
     firstItem && secondItem && firstItem.x === secondItem.x && firstItem.y === secondItem.y;
 
-function Board({ bumpScore }) {
+function Board({ bumpScore }, ref) {
     const [matrix, setMatrix] = useState(initialMatrix);
     const [firstItem, setFirstItem] = useState(null);
     const [secondItem, setSecondItem] = useState(null);
@@ -37,6 +43,37 @@ function Board({ bumpScore }) {
         updateBoardUntilNoCombos({ setMatrix, setComboMatrix, bumpScore })
             .then(() => setIsProcessing(false));
     }, [bumpScore]);
+
+    useImperativeHandle(ref, () => ({ showHint }));
+
+    async function showHint() {
+        setIsProcessing(true);
+
+        const hint = getHint();
+        if (!hint) {
+            return false;
+        }
+
+        const { x1, y1, x2, y2 } = hint;
+        await (async function focusAndUnfocus(repeatCount) {
+            if (repeatCount === 0) {
+                return;
+            }
+
+            setFirstItem({ x: x1, y: y1});
+            setSecondItem({ x: x2, y: y2});
+            await wait(100);
+
+            setFirstItem(null);
+            setSecondItem(null);
+            await wait(100);
+
+            await focusAndUnfocus(repeatCount - 1);
+        })(5);
+
+        setIsProcessing(false);
+        return true;
+    };
 
     async function onItemClick(x, y) {
 
@@ -91,4 +128,4 @@ function Board({ bumpScore }) {
     }</div>;
 };
 
-export default Board;
+export default forwardRef(Board);
