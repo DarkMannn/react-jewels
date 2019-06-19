@@ -227,7 +227,7 @@ describe('traverseRightAndGetCombos(), traverseUpAndGetCombos()', () => {
             mutatePropsInObjectMatrix('jewelIndex')(gameBoard4)(stubJewels).mutate();
 
             const zeroRow = gameBoard4.map(column => column[0]);
-            const comboMapX = zeroRow.map(internals.traverseUpAndGetCombos);
+            const comboMapX = zeroRow.map(internals.traverseUpAndFindCombos);
             expect(comboMapX).toEqual([
                 [0, 1, 2],
                 [],
@@ -236,7 +236,7 @@ describe('traverseRightAndGetCombos(), traverseUpAndGetCombos()', () => {
             ]);
 
             const zeroColumn = gameBoard4[0];
-            const comboMapY = zeroColumn.map(internals.traverseRightAndGetCombos);
+            const comboMapY = zeroColumn.map(internals.traverseRightAndFindCombos);
             expect(comboMapY).toEqual([
                 [],
                 [],
@@ -259,7 +259,7 @@ describe('traverseRightAndGetCombos(), traverseUpAndGetCombos()', () => {
             mutatePropsInObjectMatrix('jewelIndex')(gameBoard8)(stubJewels).mutate();
 
             const zeroRow = gameBoard8.map(column => column[0]);
-            const comboMapX = zeroRow.map(internals.traverseUpAndGetCombos);
+            const comboMapX = zeroRow.map(internals.traverseUpAndFindCombos);
             expect(comboMapX).toEqual([
                 [0, 1, 2, 3, 4, 5, 6],
                 [],
@@ -272,7 +272,7 @@ describe('traverseRightAndGetCombos(), traverseUpAndGetCombos()', () => {
             ]);
 
             const zeroColumn = gameBoard8[0];
-            const comboMapY = zeroColumn.map(internals.traverseRightAndGetCombos);
+            const comboMapY = zeroColumn.map(internals.traverseRightAndFindCombos);
             expect(comboMapY).toEqual([
                 [3, 4, 5],
                 [],
@@ -381,5 +381,58 @@ describe('generateComboMatrixFromCombos()', () => {
             [undefined, undefined, true],
             [true, true, true]
         ]);
+    });
+});
+
+describe('getPotentialCombosInLinkedList()', () => {
+    it('returns "[{ x1, y1, x2, y2 }]" object[] with combos if exist', async () => {
+        const gameBoard8 = internals.makeBoard(8, 8);
+        const stubJewels = [
+            [1, 1, 4, 2, 2, 4, 2, 3],
+            [2, 3, 4, 4, 2, 1, 2, 1],
+            [5, 5, 3, 6, 1, 3, 3, 0],
+            [0, 1, 6, 2, 4, 4, 5, 6],
+            [0, 6, 0, 6, 5, 6, 0, 6],
+            [4, 6, 0, 6, 0, 3, 0, 2],
+            [5, 5, 2, 4, 1, 6, 1, 6],
+            [5, 5, 2, 4, 0, 3, 0, 2],
+        ];
+        mutatePropsInObjectMatrix('jewelIndex')(gameBoard8)(stubJewels).mutate();
+
+        const potentialCombos1 = internals.getPotentialCombosInLinkedList('up')(gameBoard8[0][5]);
+        expect(potentialCombos1.length).toBe(1);
+        expect(potentialCombos1[0]).toEqual({ x1: 0, y1: 5, x2: 0, y2: 6 });
+
+        const potentialCombos2 = internals.getPotentialCombosInLinkedList('right')(gameBoard8[3][3]);
+        expect(potentialCombos2.length).toBe(3);
+        expect(potentialCombos2[0]).toEqual({ x1: 3, y1: 3, x2: 3, y2: 2 });
+        expect(potentialCombos2[1]).toEqual({ x1: 3, y1: 3, x2: 2, y2: 3 });
+        expect(potentialCombos2[2]).toEqual({ x1: 3, y1: 3, x2: 3, y2: 2 });
+
+        const potentialCombos3 = internals.getPotentialCombosInLinkedList('up')(gameBoard8[2][4]);
+        expect(potentialCombos3.length).toBe(0);
+
+        const potentialCombos4 = internals.getPotentialCombosInLinkedList('right')(gameBoard8[6][0]);
+        expect(potentialCombos4.length).toBe(0);
+    });
+});
+
+describe.only('traverseAndFindPotentialCombos()', () => {
+    it('returns "{ startField: {}, potentialCombos: [] }" object with combos if exist', async () => {
+        const gameBoard8 = internals.makeBoard(8, 8);
+        const stubJewels = [
+            [1, 1, 4, 2, 2, 4, 2, 3],
+            [2, 3, 4, 4, 2, 1, 2, 1],
+            [5, 5, 3, 6, 1, 3, 3, 0],
+            [0, 1, 6, 2, 4, 4, 5, 6],
+            [0, 6, 0, 6, 5, 6, 0, 6],
+            [4, 6, 0, 6, 0, 3, 0, 2],
+            [5, 5, 2, 4, 1, 6, 1, 6],
+            [5, 5, 2, 4, 0, 3, 0, 2],
+        ];
+        mutatePropsInObjectMatrix('jewelIndex')(gameBoard8)(stubJewels).mutate();
+
+        const allPotentialCombos = internals.traverseAndFindPotentialCombos(gameBoard8);
+        expect(allPotentialCombos.length).toBe(6);
     });
 });

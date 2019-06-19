@@ -98,18 +98,18 @@ const getCombosInLinkedList = directionLink =>
         return sumOfCombos;
     };
 
-const traverseRightAndGetCombos = getCombosInLinkedList('right');
-const traverseUpAndGetCombos = getCombosInLinkedList('up');
+const traverseRightAndFindCombos = getCombosInLinkedList('right');
+const traverseUpAndFindCombos = getCombosInLinkedList('up');
 
-export const traverseAndFindCombos = matrix => {
+export const traverseAndFindCombos = board => {
 
     const comboMap = { x: [], y: [] };
 
-    const zeroRow = matrix.map(column => column[0]);
-    comboMap.x = zeroRow.map(traverseUpAndGetCombos);
+    const zeroRow = board.map(column => column[0]);
+    comboMap.x = zeroRow.map(traverseUpAndFindCombos);
 
-    const zeroColumn = matrix[0];
-    comboMap.y = zeroColumn.map(traverseRightAndGetCombos);
+    const zeroColumn = board[0];
+    comboMap.y = zeroColumn.map(traverseRightAndFindCombos);
 
     return comboMap;
 };
@@ -120,11 +120,11 @@ export const traverseAndFindCombo = field => {
 
     const travelLeft = (field) => field.left ? travelLeft(field.left) : field;
     const farLeftField = travelLeft(field);
-    partialComboMap.y[field.y] = traverseRightAndGetCombos(farLeftField);
+    partialComboMap.y[field.y] = traverseRightAndFindCombos(farLeftField);
 
     const travelDown = (field) => field.down ? travelDown(field.down) : field;
     const bottomField = travelDown(field);
-    partialComboMap.x[field.x] = traverseUpAndGetCombos(bottomField);
+    partialComboMap.x[field.x] = traverseUpAndFindCombos(bottomField);
 
     return partialComboMap;
 };
@@ -142,6 +142,73 @@ export const generateComboMatrixFromCombos = comboMap => {
     return comboMatrix;
 }
 
+export const getPotentialCombosInLinkedList = direction =>
+    startField => {
+
+        const oppositeDirection = { right: 'left', up: 'down' }[direction];
+        const orthogonalDirections = { right: ['up', 'down'], up: ['left', 'right']}[direction];
+        const potentialCombos = [];
+
+        if (
+            startField[direction] && startField[direction][direction]
+            && startField[direction].jewelIndex === startField[direction][direction].jewelIndex
+        ) {
+            const potentialComboJewel = startField[direction].jewelIndex;
+            orthogonalDirections.forEach(orthDir => {
+                if (startField[orthDir] && startField[orthDir].jewelIndex === potentialComboJewel) {
+                    potentialCombos.push({ x2: startField[orthDir].x, y2: startField[orthDir].y });
+                }
+            });
+            if (startField[oppositeDirection] && startField[oppositeDirection].jewelIndex === potentialComboJewel) {
+                potentialCombos.push({ x2: startField[oppositeDirection].x, y2: startField[oppositeDirection].y });
+            }
+        }
+
+        if (
+            startField[oppositeDirection] && startField[direction]
+            && startField[oppositeDirection].jewelIndex === startField[direction].jewelIndex
+        ) {
+            const potentialComboJewel = startField[direction].jewelIndex;
+            orthogonalDirections.forEach(orthDir => {
+                if (startField[orthDir] && startField[orthDir].jewelIndex === potentialComboJewel) {
+                    potentialCombos.push({ x2: startField[orthDir].x, y2: startField[orthDir].y });
+                }
+            });
+        }
+
+        if (
+            startField[oppositeDirection] && startField[oppositeDirection][oppositeDirection]
+            && startField[oppositeDirection].jewelIndex === startField[oppositeDirection][oppositeDirection].jewelIndex
+        ) {
+            const potentialComboJewel = startField[oppositeDirection].jewelIndex;
+            orthogonalDirections.forEach(orthDir => {
+                if (startField[orthDir] && startField[orthDir].jewelIndex === potentialComboJewel) {
+                    potentialCombos.push({ x2: startField[orthDir].x, y2: startField[orthDir].y });
+                }
+            });
+            if (startField[direction] && startField[direction].jewelIndex === potentialComboJewel) {
+                potentialCombos.push({ x2: startField[direction].x, y2: startField[direction].y });
+            }
+        }
+
+        return potentialCombos.map(endField => ({ x1: startField.x, y1: startField.y, ...endField }));
+    };
+
+const traverseRightAndFindPotentialCombos = getPotentialCombosInLinkedList('right');
+const traverseUpAndFindPotentialCombos = getPotentialCombosInLinkedList('up');
+
+export const traverseAndFindPotentialCombos = board => {
+
+    const potentialCombosNested = board.map((xArray, x) =>
+        xArray.map((yField, y) =>
+            [...traverseUpAndFindPotentialCombos(yField), ...traverseRightAndFindPotentialCombos(yField)]
+        )
+    );
+    return potentialCombosNested
+        .reduce((flatArr, potentialComboArr) => [...flatArr, ...potentialComboArr], [])
+        .filter(fieldPotentialCombos => fieldPotentialCombos.length);
+};
+
 export const internals = {
     generateJewelIndex,
     makeBoardField,
@@ -151,9 +218,11 @@ export const internals = {
     createNullFilledMatrix,
     createTwoFieldSwappedMatrix,
     getCombosInLinkedList,
-    traverseRightAndGetCombos,
-    traverseUpAndGetCombos,
+    traverseRightAndFindCombos,
+    traverseUpAndFindCombos,
     traverseAndFindCombos,
     traverseAndFindCombo,
     generateComboMatrixFromCombos,
+    getPotentialCombosInLinkedList,
+    traverseAndFindPotentialCombos
 };
