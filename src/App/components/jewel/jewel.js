@@ -11,9 +11,7 @@ const JewelDiv = styled.div.attrs(({ focused, combo, x, y, backgroundColor }) =>
     }
 }))``;
 
-function Jewel({
-    backgroundColor, x, y, onItemClick, isFocused, isInCombo
-}) {
+function Jewel({ backgroundColor, x, y, onItemClick, isFocused, isInCombo }) {
     return <JewelDiv
         backgroundColor={backgroundColor}
         focused={isFocused}

@@ -8,7 +8,9 @@ import {
     mutatePropsInObjectMatrix,
     makeGenerateRandomIntInclusive,
     media,
-    wait
+    wait,
+    areItemsAdjacent,
+    doItemsMatch,
 } from './utils';
 
 describe('throwMissingParam()', () => {
@@ -119,5 +121,33 @@ describe('wait()', () => {
         const temp = 5;
         await wait(10);
         expect(temp).toBe(5);
+    });
+});
+
+describe('areItemsAdjacent()', () => {
+    it('shows are items ajdacent', async () => {
+        let firstItem = { x: 1, y: 1 };
+        let secondItem = { x: 1, y: 2 };
+        expect(areItemsAdjacent(firstItem, secondItem)).toBeTruthy();
+
+        firstItem = { x: 1, y: 1 };
+        secondItem = { x: 2, y: 1 };
+        expect(areItemsAdjacent(firstItem, secondItem)).toBeTruthy();
+
+        firstItem = { x: 1, y: 1 };
+        secondItem = { x: 1, y: 3 };
+        expect(areItemsAdjacent(firstItem, secondItem)).toBeFalsy();
+    });
+});
+
+describe('doItemsMatch()', () => {
+    it('shows if items match', async () => {
+        let firstItem = { x: 1, y: 1 };
+        let secondItem = { x: 1, y: 1 };
+        expect(doItemsMatch(firstItem, secondItem)).toBeTruthy();
+
+        firstItem = { x: 1, y: 1 };
+        secondItem = { x: 1, y: 2 };
+        expect(doItemsMatch(firstItem, secondItem)).toBeFalsy();
     });
 });

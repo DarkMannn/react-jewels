@@ -16,7 +16,7 @@ import {
     getHint
 } from '../../engine/engine.js';
 import { JewelsIndexHash } from '../../engine/jewels.js';
-import { wait } from '../../utils/utils.js';
+import { wait, areItemsAdjacent, doItemsMatch } from '../../utils/utils.js';
 
 const BoardCss = css`
     display: grid;
@@ -24,12 +24,6 @@ const BoardCss = css`
     grid-area: 3 / 4 / 8 / 9;
     gap: 0.4%;
 `;
-
-const areItemsAdjacent = (firstItem, secondItem) =>
-    (firstItem.x === secondItem.x && Math.abs(firstItem.y - secondItem.y) === 1) ||
-    (firstItem.y === secondItem.y && Math.abs(firstItem.x - secondItem.x) === 1);
-const doItemsMatch = (firstItem, secondItem) =>
-    firstItem && secondItem && firstItem.x === secondItem.x && firstItem.y === secondItem.y;
 
 function Board({ bumpScore }, ref) {
     const [matrix, setMatrix] = useState(initialMatrix);
@@ -41,7 +35,9 @@ function Board({ bumpScore }, ref) {
     useEffect(() => {
 
         updateBoardUntilNoCombos({ setMatrix, setComboMatrix, bumpScore })
-            .then(() => setIsProcessing(false));
+            .then(() => {
+                setIsProcessing(false)
+            });
     }, [bumpScore]);
 
     useImperativeHandle(ref, () => ({ showHint }));
