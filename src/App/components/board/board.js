@@ -80,15 +80,16 @@ function Board({ bumpScore }, ref) {
         if (!firstItem) {
             return setFirstItem({ x, y });
         }
-        if (firstItem && firstItem.x === x && firstItem.y === y) {
+        if (doItemsMatch(firstItem, { x, y })) {
             return setFirstItem(null);
         }
-        if (firstItem && areItemsAdjacent(firstItem, { x, y })) {
+        if (areItemsAdjacent(firstItem, { x, y })) {
+            const tempSecondItem = { x, y };
             setIsProcessing(true);
-            setSecondItem({ x, y });
+            setSecondItem(tempSecondItem);
             await wait()
 
-            const newMatrix = createTwoFieldSwappedMatrix(firstItem)({ x, y })(oldMatrix);
+            const newMatrix = createTwoFieldSwappedMatrix(firstItem)(tempSecondItem)(oldMatrix);
             setMatrix(newMatrix);
             await wait();
 
