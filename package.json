@@ -1,7 +1,8 @@
 {
   "name": "react-jewels",
   "version": "0.1.0",
-  "private": true,
+  "description": "Match 3 jewels game made in React",
+  "homepage": "https://github.com/DarkMannn/react-jewels",
   "dependencies": {
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -32,5 +33,16 @@
   "devDependencies": {
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0"
-  }
+  },
+  "keywords": [
+    "react",
+    "hooks",
+    "jewels",
+    "game",
+    "javascript",
+    "js",
+    "match"
+  ],
+  "author": "DarkMannn",
+  "license": "MIT"
 }
