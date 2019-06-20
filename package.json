@@ -1,8 +1,9 @@
 {
   "name": "react-jewels",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Match 3 jewels game made in React",
   "homepage": "https://github.com/DarkMannn/react-jewels",
+  "repository": "https://github.com/DarkMannn/react-jewels",
   "dependencies": {
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
