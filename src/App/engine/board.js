@@ -66,7 +66,7 @@ export const createNullShiftedMatrix = matrix => matrix.map(xArray =>
 );
 
 export const createNullFilledMatrix = fillFn => matrix => matrix.map(xArray =>
-        xArray.map(yField => yField !== null ? yField : fillFn())
+    xArray.map(yField => yField !== null ? yField : fillFn())
 );
 
 export const createTwoFieldSwappedMatrix = ({ x: x1, y: y1 }) => ({ x: x2, y: y2 }) => matrix => {
