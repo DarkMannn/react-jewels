@@ -9,6 +9,6 @@ The project was bootstrapped with Create React App, so just do:
     npm start
 ```
 
-Here is a screenshot of the game:
+Here is one screenshot of the game:
 
 ![alt](screenshot.png)
