@@ -1,4 +1,4 @@
-# React-Jewels game
+# react-jewels game
 
 This is a jewels matching game made using React.js with Hooks. The entire project is made just for fun.
 
